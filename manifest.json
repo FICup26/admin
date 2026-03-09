@@ -1,12 +1,25 @@
 {
-  "background_color": "#ffffff",
-  "dir": "ltr",
-  "display": "standalone",
   "name": "ficup26.github",
-  "orientation": "any",
-  "scope": "/",
-  "short_name": "ficup26.github",
+  "short_name": "ficup26",
+  "description": "App per admin",
   "start_url": "https://ficup26.github.io/admin/",
+  "display": "standalone",
+  "background_color": "#ffffff",
   "theme_color": "#ffffff",
-  "description": "App per admin"
+  "orientation": "any",
+  "scope": "/admin/",
+  "icons": [
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
 }
