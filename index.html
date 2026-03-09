@@ -1,0 +1,930 @@
+ <!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FICup Admin - Gestionale Completo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+    :root { 
+        --bg-main: #F2F4F7;
+        --glass-white: rgba(255, 255, 255, 0.9);
+        --royal-blue: #002D58;
+        --royal-light: #004A8F;
+        --gold-satin: #C5A028;
+        --gold-gradient: linear-gradient(135deg, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
+        --danger-gradient: linear-gradient(135deg, #FF416C 0%, #FF4B2B 100%);
+        --text-deep: #0A192F;
+        --wa-green: #25D366;
+        --shadow-inset: inset 2px 2px 5px rgba(0,0,0,0.05), inset -3px -3px 7px rgba(255,255,255,0.8);
+        --shadow-box: 0 20px 40px rgba(0, 45, 88, 0.1);
+        --transition-premium: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    body { 
+        margin: 0; 
+        font-family: 'Inter', sans-serif; 
+        background: var(--bg-main); 
+        color: var(--text-deep); 
+        padding-bottom: 140px;
+    }
+    /* Header di Lusso */
+    header { 
+        padding: 50px 25px 25px; 
+        background: var(--glass-white);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(197, 160, 40, 0.3);
+        position: sticky; top: 0; z-index: 1000;
+        text-align: left;
+    }
+    header b { 
+        font-size: 30px; 
+        font-weight: 800; 
+        background: linear-gradient(90deg, var(--royal-blue), var(--gold-satin));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -1.5px;
+    }
+    .container { padding: 20px; max-width: 480px; margin: auto; }
+    /* Box Credenziali Spettacolare */
+    .box { 
+        background: var(--glass-white);
+        padding: 30px 25px; 
+        border-radius: 30px; 
+        border: 1px solid rgba(255,255,255,0.5);
+        box-shadow: var(--shadow-box);
+        margin-bottom: 30px;
+        position: relative;
+        overflow: hidden;
+    }
+    .box::before {
+        content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 6px; background: var(--gold-gradient);
+    }
+    /* Input Moderni con Effetto Inset */
+    label { font-weight: 700; font-size: 12px; color: var(--royal-blue); margin-left: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+    
+    input, textarea, select { 
+        width: 100%; 
+        padding: 16px 20px; 
+        margin: 8px 0 20px; 
+        border-radius: 20px; 
+        border: 1px solid rgba(0,0,0,0.03); 
+        background: #F8FAFC; 
+        box-shadow: var(--shadow-inset);
+        color: var(--text-deep); 
+        font-size: 16px;
+        box-sizing: border-box;
+        transition: 0.3s ease;
+    }
+    input:focus { border-color: var(--gold-satin); background: white; outline: none; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+    /* PULSANTI MODERNISSIMI */
+    button {
+        width: 100%;
+        padding: 18px;
+        border-radius: 22px;
+        border: none;
+        font-weight: 800;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        transition: var(--transition-premium);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+    /* Effetto Luce al passaggio (Glossy) */
+    button::after {
+        content: ""; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: 0.6s;
+    }
+    button:hover::after { left: 100%; }
+    button:hover { transform: translateY(-4px); }
+    button:active { transform: translateY(1px); }
+    .btn-main { background: var(--royal-blue); color: white; box-shadow: 0 12px 24px rgba(0, 45, 88, 0.25); }
+    .btn-sub { background: var(--gold-gradient); color: #4a3a00; box-shadow: 0 12px 24px rgba(191, 149, 63, 0.3); }
+    /* Pulsante Elimina Dinamico */
+    .btn-delete {
+        background: var(--danger-gradient);
+        color: white;
+        padding: 10px 18px;
+        border-radius: 15px;
+        width: auto;
+        font-size: 11px;
+        margin-top: 0;
+        box-shadow: 0 6px 15px rgba(255, 65, 108, 0.25);
+    }
+    /* Layout Card Squadre e Sostituzioni */
+    .card { 
+        background: white; 
+        padding: 22px; 
+        border-radius: 28px; 
+        margin-bottom: 18px; 
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border: 1px solid rgba(0,0,0,0.02);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.03);
+        transition: var(--transition-premium);
+    }
+    .card:hover { transform: scale(1.02); box-shadow: var(--shadow-box); }
+    .card-info { flex: 1; }
+    .card-info b { font-size: 19px; color: var(--royal-blue); letter-spacing: -0.5px; display: block; }
+    .note-text { font-size: 13px; color: #718096; display: block; margin-top: 4px; }
+    .phone-text { color: var(--gold-satin); font-weight: 800; font-size: 13px; margin-top: 8px; display: block; }
+    /* Contenitore dei pulsanti a destra della card */
+    .actions { 
+        display: flex; 
+        align-items: center;
+        gap: 12px; /* <--- QUESTO CREA LO SPAZIO TRA MATITA E WA */
+        flex-shrink: 0;
+    }
+    /* Stile specifico per i pulsanti icona (Matita, Cestino) */
+    .icon-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(0,0,0,0.05);
+        background: #F8FAFC;
+        cursor: pointer;
+        transition: var(--transition-premium);
+        font-size: 18px;
+    }
+    .icon-btn:hover {
+        transform: scale(1.1);
+        background: white;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    }
+    /* Nav Bar Capsula Luxury */
+    .nav-tabs { 
+        position: fixed; 
+        bottom: 25px; left: 20px; right: 20px; 
+        height: 75px;
+        background: rgba(0, 45, 88, 0.98);
+        backdrop-filter: blur(15px);
+        display: flex; 
+        justify-content: space-around; 
+        align-items: center; 
+        border-radius: 28px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        z-index: 1000;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    }
+    
+    .nav-btn { 
+        background: none; border: none; 
+        color: rgba(255,255,255,0.4); 
+        font-weight: 800; font-size: 9px; 
+        display: flex; flex-direction: column; align-items: center; gap: 5px;
+        transition: 0.4s ease;
+        flex: 1;
+    }
+    
+    .nav-btn.active { color: #FFF; }
+    .nav-btn.active span:first-child { 
+        filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.5));
+        transform: scale(1.2) translateY(-4px);
+    }
+    .nav-btn span:first-child { font-size: 20px; transition: 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+    .wa-link { 
+        background: #F0FDF4; color: var(--wa-green); 
+        padding: 10px 18px; border-radius: 14px;
+        font-weight: 800; border: 1.5px solid var(--wa-green);
+        text-decoration: none; font-size: 12px;
+        transition: 0.3s;
+    }
+    .wa-link:hover { background: var(--wa-green); color: white; }
+    .hidden { display: none !important; }
+    /* Micro-animazione per la comparsa delle sezioni */
+    #appSection > div:not(.hidden) {
+        animation: fadeInSlide 0.5s ease-out;
+    }
+    @keyframes fadeInSlide {
+        from { opacity: 0; transform: translateY(15px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+      /* Contenitore per distanziare i pulsanti */
+    .actions { 
+        display: flex; 
+        align-items: center; 
+        gap: 10px; /* Spazio tra matita, WA e cestino */
+        flex-shrink: 0;
+    }
+    /* Pulsante icona standardizzato */
+    .icon-btn {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(0,0,0,0.05);
+        background: #F8FAFC;
+        cursor: pointer;
+        transition: var(--transition-premium);
+        font-size: 18px;
+    }
+    .icon-btn:hover { transform: scale(1.1); background: white; }
+    /* Versione specifica per Elimina */
+    .btn-delete-small {
+        background: #FFF0F0;
+        color: #FF4B2B;
+        border: 1px solid #FFE0E0;
+    }
+/* Tasto Burger visibile sopra l'header */
+.menu-btn {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  cursor: pointer;
+  z-index: 1100; /* Più alto dell'header */
+  background: white;
+  padding: 10px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bar {
+  width: 22px;
+  height: 2px;
+  background-color: var(--royal-blue);
+  transition: 0.4s;
+}
+
+/* Pannello laterale */
+.side-nav {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1200;
+  top: 0;
+  left: 0;
+  background-color: var(--royal-blue);
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 80px;
+}
+
+.side-nav a {
+  padding: 15px 30px;
+  text-decoration: none;
+  font-size: 18px;
+  color: #fff;
+  display: block;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Spostiamo il titolo dell'header per non coprire il tasto */
+header {
+    padding-left: 75px !important;
+}
+
+.external-view {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    z-index: 2000; /* Sopra tutto */
+    display: none; /* Inizia nascosto */
+}
+
+#creator-frame {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.close-external {
+    position: fixed;
+    top: 15px;      /* Distanza dal bordo superiore */
+    left: 50%;      /* Centra orizzontalmente */
+    transform: translateX(-50%); /* Correzione per centratura perfetta */
+    width: 40px;    /* Dimensioni ridotte */
+    height: 40px;
+    background: var(--royal-blue); /* Colore coordinato alla tua app */
+    color: white;
+    border: 2px solid var(--gold-satin); /* Bordino oro come richiamo */
+    border-radius: 50%; /* Forma circolare */
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 2001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    transition: var(--transition-premium);
+}
+
+.close-external:hover {
+    transform: translateX(-50%) scale(1.1);
+    background: var(--danger-gradient); /* Diventa rosso al passaggio */
+}
+
+
+    
+</style>
+</head>
+<body>
+    
+    <div class="menu-btn" onclick="toggleMenu()">
+  <div class="bar"></div>
+  <div class="bar"></div>
+  <div class="bar"></div>
+</div>
+
+<nav id="side-menu" class="side-nav">
+  <a href="javascript:void(0)" class="close-btn" onclick="toggleMenu()" style="position: absolute; top: 10px; right: 25px; font-size: 36px; border: none;">&times;</a>
+  
+  <div class="menu-content">
+  <a href="#" onclick="toggleMenu()">Home</a>
+  <a href="javascript:void(0)" onclick="openCreator()">Creator</a> 
+  <a href="#" onclick="toggleMenu()">Contatti</a>
+</div>
+
+</nav>
+
+<div id="creator-view" class="external-view">
+    <button class="close-external" onclick="closeCreator()" title="Chiudi">×</button>
+    <iframe id="creator-frame" src="" frameborder="0"></iframe>
+</div>
+
+
+    
+<header>⚽ FICup Admin</header>
+<div class="container">
+    <div id="loginSection" class="box">
+        <h3 style="text-align:center; margin-top:0">Accesso Gestionali</h3>
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button class="btn-main" id="loginBtn">ACCEDI</button>
+        <div id="statusMsg" style="text-align:center; color: #e74c3c; margin-top:10px; font-size:12px;"></div>
+    </div>
+    <div id="appSection" class="hidden">
+        
+        <div class="nav-tabs">
+    <button class="nav-btn active" id="tabAgenda" onclick="switchTab('agenda')">
+        <span>📅</span><span>AGENDA</span>
+    </button>
+    <button class="nav-btn" id="tabSostituzioni" onclick="switchTab('sostituzioni')">
+        <span>🔄</span><span>SOST.</span>
+    </button>
+    <button class="nav-btn" id="tabRichieste" onclick="switchTab('richieste')">
+        <span>📣</span><span>RICH.</span>
+    </button>
+    <button class="nav-btn" id="tabFormazione" onclick="switchTab('formazione')">
+        <span>⚽</span><span>MATCH</span>
+    </button>
+    <button class="nav-btn" id="tabStorico" onclick="switchTab('storico')">
+        <span>🕒</span><span>LOG</span>
+    </button>
+</div>
+        
+        
+        <div id="sectionAgenda">
+            <div class="box">
+                <h4 id="formTitle" style="margin-top:0">➕ Nuova Squadra</h4>
+                <input type="hidden" id="editId">
+                <input type="text" id="newTeamName" placeholder="Nome Squadra">
+                <input type="text" id="newTeamPhone" placeholder="Cellulare">
+                <textarea id="newTeamNote" placeholder="Note extra..."></textarea>
+                <div style="display:flex; gap:10px">
+                    <button class="btn-main" id="addTeamBtn" onclick="saveTeam()">SALVA</button>
+                    <button class="btn-secondary hidden" id="cancelEditBtn" onclick="resetForm()" style="width:100px; background:#444;">ANNULLA</button>
+                </div>
+            </div>
+            <input type="text" id="search" placeholder="🔍 Cerca squadre..." oninput="renderTeams()">
+            <div id="teamList"></div>
+        </div>
+        <div id="sectionSostituzioni" class="hidden">
+            <div class="box">
+                <h4 id="subFormTitle" style="margin-top:0">🔄 Nuova Sostituzione</h4>
+                <div id="teamNotFoundAlert" class="alert-box hidden" style="background: rgba(231, 76, 60, 0.1); border: 1px solid var(--danger-red); color: var(--danger-red); padding: 10px; border-radius: 8px; font-size: 11px; margin-bottom: 10px; text-align: center;">⚠️ TEAM NON PRESENTE IN AGENDA</div>
+                
+                <input type="hidden" id="subEditId">
+                <input type="text" id="subAuthor" placeholder="Chi richiede? (Nome)">
+                <input type="text" id="subOut" placeholder="Squadra da sostituire">
+                
+                <div id="subInContainer" class="hidden">
+                    <hr style="border: 0; border-top: 1px solid #333; margin: 15px 0;">
+                    <label style="font-size: 11px; color: var(--sub-teal); font-weight: bold;">DATI NUOVA SQUADRA:</label>
+                    <input type="text" id="subIn" placeholder="Nome Nuova Squadra">
+                    <input type="text" id="subPhoneIn" placeholder="Nuovo Numero Telefono">
+                    <select id="subStatus">
+                        <option value="pending">In Attesa</option>
+                        <option value="replaced">Sostituito ✅</option>
+                    </select>
+                </div>
+                <input type="text" id="subLeague" placeholder="Nome Lega">
+                <input type="datetime-local" id="subWhen">
+                
+                <button class="btn-sub" id="btnSaveSub" onclick="saveSubstitution()">INVIA RICHIESTA</button>
+                <button class="btn-secondary hidden" id="cancelSubEditBtn" onclick="resetSubForm()" style="background:#444; margin-top:5px;">ANNULLA</button>
+            </div>
+            <div id="subList"></div>
+        </div>
+        <div id="sectionRichieste" class="hidden">
+            <div class="box">
+                <h4 id="reqFormTitle" style="margin-top:0">📣 Invia Proposta</h4>
+                <input type="hidden" id="reqEditId">
+                <input type="text" id="reqAuthor" placeholder="Tuo Nome" oninput="checkAdminKey(this.value)">
+                <textarea id="reqText" placeholder="Cosa vorresti segnalare?"></textarea>
+                
+                <div id="adminReqControls" class="hidden">
+                    <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+                        <span style="font-size:18px;">👑</span>
+                        <label style="color:var(--ai-gold); font-size:12px; font-weight:bold; text-transform:uppercase;">Pannello Super Admin</label>
+                    </div>
+                    
+                    <label style="color:#888; font-size:10px; font-weight:bold;">STATO RICHIESTA:</label>
+                    <select id="adminStatusSelect">
+                        <option value="pending">In Attesa</option>
+                        <option value="working">In Lavorazione 🛠️</option>
+                        <option value="nego">Negoziazione 🗣️</option>
+                        <option value="accepted">Accettata ✅</option>
+                        <option value="rejected">Rifiutata ❌</option>
+                    </select>
+                    
+                    <label style="color:#888; font-size:10px; font-weight:bold; margin-top:10px; display:block;">AGGIUNGI NOTA / FEEDBACK:</label>
+                    <textarea id="adminNoteInput" placeholder="Inserisci una nota per l'utente..."></textarea>
+                </div>
+                <button class="btn-main" id="sendReqBtn" onclick="sendRequest()">INVIA</button>
+                <button class="btn-secondary hidden" id="cancelReqEditBtn" onclick="resetReqForm()" style="background:#444; margin-top:5px;">ANNULLA</button>
+            </div>
+            <div id="requestList"></div>
+        </div>
+        <div id="sectionFormazione" class="hidden">
+    <div class="box">
+        <h4 style="margin-top:0">📅 Promemoria Match</h4>
+        <input type="text" id="senderName" placeholder="Tuo Nome (Mittente)">
+        <input type="datetime-local" id="matchTime">
+        <button class="btn-main" onclick="generateBaseMessage()">GENERA MESSAGGIO BASE</button>
+    </div>
+    <div class="box">
+        <textarea id="finalMsg" style="min-height:160px; border-color:var(--wa-green);" placeholder="Il messaggio apparirà qui..."></textarea>
+        <button class="btn-share" style="margin-top:10px;" onclick="shareAndLog()">SALVA E CONDIVIDI WHATSAPP</button>
+    </div>
+</div>
+        <div id="sectionStorico" class="hidden">
+            <h4 style="margin-left:5px;">🕒 Cronologia</h4>
+            <div id="historyList"></div>
+        </div>
+    </div>
+</div>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, onSnapshot, serverTimestamp, arrayUnion } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    const firebaseConfig = {
+        apiKey: "AIzaSyAWMmt7lrRF1V6AIpQWh2CwXZE88_w_8E0",
+        authDomain: "ficup-c9186.firebaseapp.com",
+        projectId: "ficup-c9186",
+        storageBucket: "ficup-c9186.firebasestorage.app",
+        appId: "1:825031993621:web:f9b49d210864a8c26f611c"
+    };
+    // Chiave API fornita collegata
+    const apiKey = "AIzaSyCxuG4DIPpEv6tfBsU2Uv3GwqQcQ7Sn6g4";
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    
+    let allTeams = [];
+    let allRequests = [];
+    let allSubs = [];
+    let currentUser = "";
+    let isSuperAdmin = false;
+    // --- FUNZIONI GLOBALI ---
+    
+    window.switchTab = (tab) => {
+        const tabs = ['agenda', 'sostituzioni', 'richieste', 'formazione', 'storico'];
+        tabs.forEach(t => {
+            const section = document.getElementById(`section${t.charAt(0).toUpperCase() + t.slice(1)}`);
+            const btn = document.getElementById(`tab${t.charAt(0).toUpperCase() + t.slice(1)}`);
+            if (section) section.classList.toggle('hidden', t !== tab);
+            if (btn) btn.classList.toggle('active', t === tab);
+        });
+    };
+    window.checkAdminKey = (val) => {
+        isSuperAdmin = (val.trim().toLowerCase() === "fabri86");
+        const panel = document.getElementById('adminReqControls');
+        if (isSuperAdmin) panel.classList.remove('hidden');
+        else panel.classList.add('hidden');
+        renderRequests();
+    };
+const callGemini = async (prompt, text) => {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+    
+    // Prompt più restrittivo per evitare che l'IA aggiunga chiacchiere inutili
+    const systemInstruction = `Sei un assistente per una lega di Fantacalcio. 
+    Riscrivi in stile ${prompt}. Mantieni i dati tecnici (orari, nomi) invariati. 
+    Usa le emoji. Restituisci SOLO il testo finale, niente introduzioni.`;
+    const body = {
+        contents: [{ parts: [{ text: `${systemInstruction}\n\nMessaggio originale:\n${text}` }] }]
+        };
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+            if (!response.ok) throw new Error('API Error');
+            const data = await response.json();
+            return data.candidates?.[0]?.content?.parts?.[0]?.text;
+        } catch (error) {
+            if (retries > 0) {
+                await new Promise(res => setTimeout(res, delay));
+                return callGemini(prompt, text, retries - 1, delay * 2);
+            }
+            throw error;
+        }
+    };
+    window.rewriteMessageWithAI = async () => {
+        const prompt = document.getElementById('aiPrompt').value.trim();
+        const text = document.getElementById('finalMsg').value.trim();
+        const btn = document.getElementById('aiBtn');
+        if (!text || !prompt) return;
+        btn.disabled = true;
+        btn.innerText = "IA STA SCRIVENDO...";
+        try {
+            const rewritten = await callGemini(prompt, text);
+            if (rewritten) document.getElementById('finalMsg').value = rewritten.trim();
+        } catch (e) {
+            console.error(e);
+            alert("Errore durante la generazione.");
+        } finally {
+            btn.disabled = false;
+            btn.innerText = "RISCRIVI CON IA";
+        }
+    };
+    window.saveTeam = async () => {
+        const nome = document.getElementById('newTeamName').value.trim();
+        const tel = document.getElementById('newTeamPhone').value.trim();
+        const note = document.getElementById('newTeamNote').value.trim();
+        const id = document.getElementById('editId').value;
+        if(!nome || !tel) return;
+        if(id) await updateDoc(doc(db, "squadre", id), { nome, telefono: tel, note });
+        else await addDoc(collection(db, "squadre"), { nome, telefono: tel, note });
+        resetForm();
+    };
+    window.saveSubstitution = async () => {
+        const auth = document.getElementById('subAuthor').value.trim();
+        const out = document.getElementById('subOut').value.trim();
+        const league = document.getElementById('subLeague').value.trim();
+        const when = document.getElementById('subWhen').value;
+        const id = document.getElementById('subEditId').value;
+        if(!auth || !out) return;
+        if(id) await updateDoc(doc(db, "sostituzioni", id), { autore: auth, squadraOut: out, lega: league, data_evento: when });
+        else await addDoc(collection(db, "sostituzioni"), { autore: auth, squadraOut: out, lega: league, data_evento: when, stato: "pending", data_creazione: serverTimestamp() });
+        resetSubForm();
+    };
+    window.sendRequest = async () => {
+        const id = document.getElementById('reqEditId').value;
+        const auth = document.getElementById('reqAuthor').value.trim();
+        const text = document.getElementById('reqText').value.trim();
+        if(!auth || !text) return;
+        if(id) {
+            const upd = { autore: auth, testo: text };
+            if(isSuperAdmin) {
+                upd.stato = document.getElementById('adminStatusSelect').value;
+                const note = document.getElementById('adminNoteInput').value.trim();
+                if(note) {
+                    upd.cronologia_note = arrayUnion({
+                        autore: currentUser,
+                        testo: note,
+                        data: new Date().toLocaleString(),
+                        ruolo: "admin"
+                    });
+                }
+            }
+            await updateDoc(doc(db, "richieste", id), upd);
+        } else {
+            await addDoc(collection(db, "richieste"), { autore: auth, testo: text, stato: "pending", data: serverTimestamp(), cronologia_note: [] });
+        }
+        resetReqForm();
+    };
+    // --- RENDERERS ---
+    window.renderTeams = () => {
+    const container = document.getElementById('teamList');
+    const filter = document.getElementById('search').value.toLowerCase().trim();
+    if (!container) return;
+    
+    const filteredTeams = allTeams.filter(t => {
+        const nome = t.nome.toLowerCase();
+        const note = (t.note || "").toLowerCase(); // Aggiunto controllo note
+        const telPuro = t.telefono.replace(/\D/g,'');
+        
+        // Cerca nel nome, nel telefono O nelle note (es. "abbandonato")
+        return nome.includes(filter) || telPuro.includes(filter) || note.includes(filter);
+    });
+    if (filteredTeams.length === 0 && filter !== "") {
+        container.innerHTML = `<div style="text-align:center; padding:40px; color:var(--text-deep); opacity:0.6;">❌ Nessun match trovato nelle squadre o note</div>`;
+        return;
+    }
+    container.innerHTML = "";
+    filteredTeams
+        .sort((a,b) => a.nome.localeCompare(b.nome))
+        .forEach(t => {
+            const div = document.createElement('div');
+            div.className = 'card';
+            div.innerHTML = `
+                <div class="card-info">
+                    <b>${t.nome}</b>
+                    <span class="note-text">${t.note || '<i>Senza note</i>'}</span>
+                    <span class="phone-text">📞 ${t.telefono}</span>
+                </div>
+                <div class="actions">
+                    <a href="https://wa.me/${t.telefono.replace(/\D/g,'')}" target="_blank" class="wa-link">WA</a>
+                    
+                    <button class="icon-btn edit-btn" onclick="startEdit('${t.id}')">✏️</button>
+                    
+                    <button class="icon-btn btn-delete" onclick="deleteDocument('squadre', '${t.id}')">🗑️</button>
+                </div>`;
+            container.appendChild(div);
+        });
+};
+    window.renderSubs = () => {
+    const container = document.getElementById('subList');
+    if (!container) return;
+    
+    // Titolo della sezione
+    container.innerHTML = "<h4>📋 Richieste Sostituzioni</h4>";
+    
+    allSubs
+        .sort((a,b) => (b.data_creazione?.seconds||0) - (a.data_creazione?.seconds||0))
+        .forEach(s => {
+            const div = document.createElement('div'); 
+            div.className = 'card sub-card';
+            
+            // Costruiamo il contenuto della card
+            div.innerHTML = `
+                <div class="card-info">
+                    <b>${s.squadraOut}</b>
+                    <span class="note-text">Lega: ${s.lega || 'N/D'}</span>
+                    <span class="status-badge status-${s.stato}">
+                        ${s.stato === 'replaced' ? 'Sostituito ✅' : 'In Attesa'}
+                    </span>
+                </div>
+                <div class="actions">
+                    <button class="icon-btn edit-btn" onclick="startSubEdit('${s.id}')">
+                        ✏️
+                    </button>
+                    
+                    <button class="icon-btn btn-delete" onclick="deleteRequest('${s.id}')">
+                        🗑️
+                    </button>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+}
+    window.renderRequests = () => {
+        const container = document.getElementById('requestList');
+        if (!container) return;
+        container.innerHTML = "<h4>📋 Lista Richieste</h4>";
+        allRequests.sort((a,b) => (b.data?.seconds||0) - (a.data?.seconds||0)).forEach(r => {
+            const div = document.createElement('div'); div.className = 'card req-card';
+            const stats = { pending: "In Attesa", working: "Lavorazione 🛠️", accepted: "Accettata ✅", rejected: "Rifiutata ❌", nego: "Negoziazione 🗣️" };
+            let cronoHtml = "";
+            if(r.cronologia_note && r.cronologia_note.length > 0) {
+                cronoHtml = `<div class="nego-history">`;
+                r.cronologia_note.forEach(n => {
+                    cronoHtml += `<div class="nego-item ${n.ruolo}"><b>${n.autore} (${n.data}):</b><br>${n.testo}</div>`;
+                });
+                cronoHtml += `</div>`;
+            }
+            const canUserEdit = (r.stato === "nego" && r.autore.toUpperCase() === currentUser);
+            div.innerHTML = `
+                <div class="card-info">
+                    <b>${r.autore}</b>
+                    <span class="note-text" style="color:white; font-style:normal; font-size:14px;">${r.testo}</span>
+                    <span class="status-badge status-${r.stato}">${stats[r.stato]}</span>
+                    ${cronoHtml}
+                </div>
+                <div class="actions">
+                    ${(isSuperAdmin || canUserEdit) ? `<button class="icon-btn edit-btn" onclick="startReqEdit('${r.id}')">✏️</button>` : ''}
+                </div>`;
+            container.appendChild(div);
+        });
+    };
+    // --- LOGIN ---
+    document.getElementById('loginBtn').onclick = async () => {
+        const u = document.getElementById('username').value.trim();
+        const p = document.getElementById('password').value.trim();
+        try {
+            const snap = await getDocs(collection(db, "utenti"));
+            let auth = false;
+            snap.forEach((doc) => {
+                const data = doc.data();
+                if (data.username?.toLowerCase() === u.toLowerCase() && data.password === p) {
+                    auth = true;
+                    currentUser = data.username.toUpperCase();
+                }
+            });
+            if (auth) {
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('appSection').classList.remove('hidden');
+                initApp();
+            } else { document.getElementById('statusMsg').innerText = "Credenziali errate."; }
+        } catch(e) { console.error(e); }
+    };
+    function initApp() {
+        onSnapshot(collection(db, "squadre"), (snap) => {
+            allTeams = []; snap.forEach(d => allTeams.push({ id: d.id, ...d.data() }));
+            renderTeams();
+        });
+        onSnapshot(collection(db, "richieste"), (snap) => {
+            allRequests = []; snap.forEach(d => allRequests.push({ id: d.id, ...d.data() }));
+            renderRequests();
+        });
+        onSnapshot(collection(db, "sostituzioni"), (snap) => {
+            allSubs = []; snap.forEach(d => allSubs.push({ id: d.id, ...d.data() }));
+            renderSubs();
+        });
+        onSnapshot(collection(db, "storico_promemoria"), (snap) => {
+            const container = document.getElementById('historyList'); 
+            if (!container) return;
+            container.innerHTML = "";
+            let list = []; snap.forEach(d => list.push({id: d.id, ...d.data()}));
+            list.sort((a,b) => (b.data_invio?.seconds||0) - (a.data_invio?.seconds||0)).forEach(h => {
+                const div = document.createElement('div'); div.className = 'card history-card';
+                div.innerHTML = `
+                <div class="card-info">
+                    <b>Mittente: ${h.mittente}</b>
+                    <p style="font-size:11px;">${h.messaggio}</p>
+                </div>`;
+                container.appendChild(div);
+            });
+        });
+    }
+    // Helper Modifica
+    window.startEdit = (id) => {
+        const t = allTeams.find(x => x.id === id);
+        document.getElementById('editId').value = id;
+        document.getElementById('newTeamName').value = t.nome;
+        document.getElementById('newTeamPhone').value = t.telefono;
+        document.getElementById('newTeamNote').value = t.note||'';
+        document.getElementById('formTitle').innerText = "✏️ Modifica";
+        document.getElementById('cancelEditBtn').classList.remove('hidden');
+        window.scrollTo(0,0);
+    };
+    window.resetForm = () => {
+        document.getElementById('newTeamName').value = ""; document.getElementById('newTeamPhone').value = "";
+        document.getElementById('newTeamNote').value = ""; document.getElementById('editId').value = "";
+        document.getElementById('formTitle').innerText = "➕ Nuova Squadra";
+        document.getElementById('cancelEditBtn').classList.add('hidden');
+    };
+    window.resetSubForm = () => { 
+        document.getElementById('subEditId').value = ""; 
+        document.getElementById('subFormTitle').innerText = "🔄 Nuova Sostituzione"; 
+        document.getElementById('cancelSubEditBtn').classList.add('hidden'); 
+    };
+    window.startSubEdit = (id) => {
+        const s = allSubs.find(x => x.id === id);
+        document.getElementById('subEditId').value = id;
+        document.getElementById('subAuthor').value = s.autore;
+        document.getElementById('subOut').value = s.squadraOut;
+        document.getElementById('subLeague').value = s.lega || "";
+        document.getElementById('subWhen').value = s.data_evento || "";
+        document.getElementById('subFormTitle').innerText = "✏️ Gestisci";
+        document.getElementById('cancelSubEditBtn').classList.remove('hidden');
+        window.scrollTo(0,0);
+    };
+    window.startReqEdit = (id) => {
+        const r = allRequests.find(x => x.id === id);
+        document.getElementById('reqEditId').value = id;
+        document.getElementById('reqAuthor').value = r.autore;
+        document.getElementById('reqText').value = r.testo;
+        document.getElementById('reqFormTitle').innerText = isSuperAdmin ? "🛠️ Gestione Admin" : "✏️ Rispondi";
+        document.getElementById('cancelReqEditBtn').classList.remove('hidden');
+        if(isSuperAdmin) {
+            document.getElementById('adminReqControls').classList.remove('hidden');
+            document.getElementById('adminStatusSelect').value = r.stato;
+            document.getElementById('adminNoteInput').value = "";
+        }
+        window.scrollTo(0,0);
+    };
+    window.resetReqForm = () => {
+        document.getElementById('reqEditId').value = "";
+        document.getElementById('reqFormTitle').innerText = "📣 Invia Proposta";
+        document.getElementById('cancelReqEditBtn').classList.add('hidden');
+        document.getElementById('adminReqControls').classList.add('hidden');
+    };
+    window.generateBaseMessage = () => {
+        const timeVal = document.getElementById('matchTime').value;
+        let timeStr = "19:15";
+        if(timeVal) timeStr = new Date(timeVal).toLocaleTimeString('it-IT', {hour:'2-digit', minute:'2-digit'});
+        document.getElementById('finalMsg').value = `📢 PROMEMORIA FICUP ⏰⚽\n\n⏳ Ricordiamo a tutti che formazione e Fantaschedina vanno inserite ENTRO le ${timeStr}.\n\n📲 Accedete all’App e completate tutto in tempo!\n🔥 Buon gioco a tutti! 💙⚽`;
+    };
+    window.shareAndLog = async () => {
+        const msg = document.getElementById('finalMsg').value;
+        const mittente = document.getElementById('senderName').value.trim();
+        if(!msg || !mittente) return;
+        await addDoc(collection(db, "storico_promemoria"), { messaggio: msg, mittente: mittente, data_invio: serverTimestamp() });
+        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+    };
+// Funzione per eliminare una richiesta/sostituzione
+window.deleteRequest = async (id) => {
+    // Alert moderno di conferma
+    if (!confirm("Sei sicuro di voler eliminare definitivamente questa richiesta?")) return;
+    try {
+        // Riferimento al documento su Firestore (assumendo la collezione 'sostituzioni')
+        await db.collection('sostituzioni').doc(id).delete();
+        
+        // Feedback visivo (opzionale)
+        alert("Richiesta eliminata con successo!");
+        
+        // Ricarica i dati per aggiornare la tabella
+        if (typeof initApp === "function") initApp(); 
+    } catch (error) {
+        console.error("Errore durante l'eliminazione:", error);
+        alert("Errore: non è stato possibile eliminare la richiesta.");
+    }
+};
+// Importa i moduli necessari (se usi i moduli JS)
+// import { doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.x.x/firebase-firestore.js";
+// La registrazione su 'window' è fondamentale per farla leggere ai pulsanti HTML
+window.deleteDocument = async (collezione, id) => {
+    // Chiediamo conferma prima di distruggere i dati
+    if (!confirm("Sei sicuro di voler eliminare definitivamente questo elemento?")) return;
+    try {
+        // Usiamo la sintassi modulare che hai già nel progetto
+        const docRef = doc(db, collezione, id);
+        await deleteDoc(docRef);
+        
+        alert("Eliminato con successo! 🗑️");
+        
+        // Aggiorniamo la vista senza ricaricare la pagina (effetto App professionale)
+        if (collezione === 'squadre') {
+            if (typeof renderTeams === "function") renderTeams();
+        } else {
+            if (typeof renderSubs === "function") renderSubs();
+        }
+    } catch (error) {
+        console.error("Errore durante l'eliminazione:", error);
+        alert("Errore tecnico: " + error.message);
+    }
+};
+window.toggleMenu = function() {
+  const menu = document.getElementById("side-menu");
+  // Se il menu è chiuso (width 0 o vuota), lo apre a 250px, altrimenti lo chiude
+  if (menu.style.width === "250px") {
+    menu.style.width = "0";
+  } else {
+    menu.style.width = "250px";
+  }
+};
+window.openCreator = function() {
+    const view = document.getElementById('creator-view');
+    const frame = document.getElementById('creator-frame');
+    
+    // Imposta l'URL del creator
+    frame.src = "https://ficup26.github.io/Card/";
+    
+    // Mostra il pannello
+    view.style.display = "block";
+    
+    // Chiude il burger menu
+    toggleMenu();
+};
+
+window.openCreator = function() {
+    const view = document.getElementById('creator-view');
+    const frame = document.getElementById('creator-frame');
+    
+    frame.src = "https://ficup26.github.io/Card/";
+    view.style.display = "block";
+    
+    // Blocca lo scroll dell'app principale sotto
+    document.body.style.overflow = "hidden";
+    
+    if (typeof toggleMenu === "function") toggleMenu();
+};
+
+window.closeCreator = function() {
+    const view = document.getElementById('creator-view');
+    const frame = document.getElementById('creator-frame');
+    
+    view.style.display = "none";
+    frame.src = "";
+    
+    // Ripristina lo scroll
+    document.body.style.overflow = "auto";
+};
+
+
+</script>
+</body>
+</html>
