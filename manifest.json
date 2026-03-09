@@ -1,8 +1,9 @@
 {
-  "name": "Admin",
-  "short_name": "Admin",
-  "description": "App per admin",
-  "start_url": "https://ficup26.github.io/admin/",
+  "id": "ficup26-admin-v1",
+  "name": "Ficup26 Admin",
+  "short_name": "Fic-Admin",
+  "description": "App gestionale per admin",
+  "start_url": "https://ficup26.github.io/admin/index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#ffffff",
